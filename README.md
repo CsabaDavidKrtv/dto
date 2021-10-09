@@ -105,7 +105,7 @@ int main()
 
 When "something" is defined in the Override, this definition is used instead of Default's definition. But if you don't redefine "something" in the Override, the Default's definition is to use.
 
-**An new approach to giving definitions for classes
+## An new approach to giving definitions for classes
 I use template specialization features for selecting which type-definition passing relates to the given class/struct.
 
 <pre><code>
@@ -158,7 +158,7 @@ public:
 };
 </code></pre>
 
-**Using of unknown definitions
+## Using of unknown definitions
 I use the C++ template parameter non-evaluating features for passing types that aren't defined/declared where you place the override definitions.
 In most cases, you have to pass custom types for classes from outside of class definitions. To do this, you have to declare the custom type before type passing. It is inconvenient, especially if we use many namespaces. Therefore we introduce another template parameter for the DefinitionTracker that contains the options for type passing, which doesn't have to be defined/declared at the type passing point because the template parameter is non-evaluated there.
 
@@ -233,7 +233,7 @@ public:
 };
 </code></pre>
 
-**Combination of the first three C++ features.
+## Combination of the first three C++ feature mentioned above
 The three features again:
 	- class/struct inheritance and
 	- C++ template specialization features
@@ -296,7 +296,7 @@ protected:
 
 If the TargetDependant specialization for the Override or the definition of File_t in this specialization doesn't exist, the file type is the default one (LinuxSystem::IO::File), in any other cases, it's the type defined in the Override specialization, now it is the MsSystem::IO::File.
 
-**Injection of overriding definition
+## Injection of overriding definition
 We use the C++ compilers included directories feature to inject the project-specific overrides for implementation details easily. If you separate the headers from implementations, put another way, if you use header and cpp files for classes (as is usually the case), you have to include the Overrides.h in cpp that uses dto. But we have an Overrides.h in our default project, where there are no overrides, so this header is essentially empty.
 
 We wouldn't like to touch the default project and won't include another implementation related to another project. For example, we have a project which contains only production implementation but doesn't contain test-related codes (mocks, stubs), and this shall remain this way.
@@ -337,7 +337,7 @@ workspace root
 Because the .cpp file includes the Overrides.h file with angle brackets (#include <Overrides.h>) and give the local "dto" folder as a system-include folder (-Idto is in the C++ input argument set), the compiler always includes the current project-specific dto/Overrides.h file. So when the compiler compiles e.g. the Dependant.cpp in the DefaultProject, it includes the DefaultProject/dto/Overrides.h file; but when it compiles the same source file in the other MsProject, the Dependant.cpp includes MsProject/dto/Overrides.h.
 Due to this solution, you can compile the Default ProjectSources with different configurations without modifying the original DefaultProject code or adding the other project-specific definitions to the DefaultProject, especially definitions and implementations of mocks or stubs for dependencies.
 
-**On demand default definition
+## On demand default definition
 It is inconvenient to define the default type of a member or a function parameter inside the dtoDesc innerclass, especially if you use the dto only for testing. Thus I introduced two more classes into the dto for defining the default type of the corresponding member, where I define this member to make it easier to read/understand the code.
 
 Here are these definitions:
@@ -418,7 +418,7 @@ struct dto::Override<Dependant, t_DefaultDtoDesc> : public t_DefaultDtoDesc
 
 This override results that the type of member0 is B_Dpcy, the same as the member1, because the member1 type remains default, which is B_Dpcy.
 
-**An overrider pair
+## An overrider pair
 If using only the above methods, you have to define the mocks inside or around of overriding section. It isn't as easy as you might think. When you have a dependency class that is also dependant, you have to resolve the definition ordering problem.
 Another option is to define the mocks around the mocked definition. I think a programming method should have as few limitations and constraints as it's possible. So we can avoid defining mocks around the original definition. With the solution given in this chapter, you can easily define your own mocks in your test or test-related projects, and not in the product code.
 
