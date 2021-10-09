@@ -239,9 +239,9 @@ public:
 
 ## Combination of the first three C++ feature mentioned above
 The three features again:
-	- class/struct inheritance and
-	- C++ template specialization features
-	- C++ template parameter unevaluation features
+- class/struct inheritance and
+- C++ template specialization features
+- C++ template parameter unevaluation features
 
 in the DependencyTypeOverride.h
 ```c++
