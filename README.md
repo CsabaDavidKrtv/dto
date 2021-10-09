@@ -64,7 +64,8 @@ I'll call this programming method "dto" from the "dependency type override" expr
 ## Overriding default definitions
 I use the class/struct inheritance features for getting the default dependency type from the base class, and we can override these definitions in the derived class definition. Therefore the base class (defaulter) contains the default definitions, and the derived one (overrider) contains the override definitions.
 
-<pre><code>struct Default
+```c++
+struct Default
 {
 	using Data_t = double;
 	using Source_t = double;
@@ -101,15 +102,16 @@ int main()
 	std::cout << value_1;
 	
 	return 0;
-}</code></pre>
+}
+```
 
 When "something" is defined in the Override, this definition is used instead of Default's definition. But if you don't redefine "something" in the Override, the Default's definition is to use.
 
 ## An new approach to giving definitions for classes
 I use template specialization features for selecting which type-definition passing relates to the given class/struct.
 
-<pre><code>
-template<typename t_UnderDefintion>
+```c++
+template<<typename t_UnderDefintion>>
 struct DefintionTracker
 {};
 
@@ -156,14 +158,14 @@ public:
 		:data(Def_t::InitData)	//The data is initialized to 1.1 as the DefintionTracker's specialization for TargetType_1 defines it.
 	{}
 };
-</code></pre>
+```
 
 ## Using of unknown definitions
 I use the C++ template parameter non-evaluating features for passing types that aren't defined/declared where you place the override definitions.
 In most cases, you have to pass custom types for classes from outside of class definitions. To do this, you have to declare the custom type before type passing. It is inconvenient, especially if we use many namespaces. Therefore we introduce another template parameter for the DefinitionTracker that contains the options for type passing, which doesn't have to be defined/declared at the type passing point because the template parameter is non-evaluated there.
 
 
-<pre><code>
+```c++
 template<typename t_UnderDefinition, typename t_Types>
 struct DefinitionTracker
 {};
@@ -176,10 +178,10 @@ struct DefintionTracker<TargetType, t_Types>
 {
 	using File_t = t_Types::MsFile_t;		//MsFile_t isn't evaluated here.
 };
-</code></pre>
+```
 
 In the LinuxSystemIO header
-<pre><code>
+```c++
 namespace LinuxSystem
 {
 namespace IO
@@ -193,10 +195,11 @@ class File
 class ...
 ...
 }
-}</code></pre>
+}
+```
 
 In the MsSystemIO header:
-<pre><code>
+```c++
 namespace MsSystem
 {
 namespace IO
@@ -210,11 +213,12 @@ class File
 class ...
 ...
 }
-}</code></pre>
+}
+```
 
 
 In the dependant header
-<pre><code>
+```c++
 #include "LinuxSystem.h"
 #include "MsSystem.h"
 
@@ -231,7 +235,7 @@ public:
 
 	Def_t::File_t file;		//In this case the file is MsSystem::IO::File;
 };
-</code></pre>
+```
 
 ## Combination of the first three C++ feature mentioned above
 The three features again:
@@ -240,7 +244,7 @@ The three features again:
 	- C++ template parameter unevaluation features
 
 in the DependencyTypeOverride.h
-<pre><code>
+```c++
 namespce dto	// Dependency Type Override
 {
 
@@ -249,10 +253,11 @@ struct Override : t_DefaultDtoDesc
 {};
 
 ... // Other helper classes/structs will be detailed later.
-}</code></pre>
+}
+```
 
 In the Overrides.h
-<pre><code>
+```c++
 #include <DependencyTypeOverride.h>
 namespace DummyNs
 {
@@ -263,10 +268,11 @@ template<typename t_DefaultDtoDesc>
 struct dto::Override<DummyNs::TargetDependant> : t_DefaultDtoDesc
 {
 	using File_t = t_DefaultDtoDesc::FileOptions::Ms_t;
-};</code></pre>
+};
+```
 
 In the TargetDependant header
-<pre><code>
+```c++
 #include <Overrides.h>	//The Overrides.h location is added to the include path, in the next chapter the explanation why.
 namespace DummyNs
 {
@@ -292,7 +298,7 @@ protected:
 };
 
 }
-</code></pre>
+```
 
 If the TargetDependant specialization for the Override or the definition of File_t in this specialization doesn't exist, the file type is the default one (LinuxSystem::IO::File), in any other cases, it's the type defined in the Override specialization, now it is the MsSystem::IO::File.
 
@@ -332,7 +338,8 @@ workspace root
 	|	|...					<- Some sources for test.
 	|	|-Main.cpp
 	|	|-CMakelists.txt		<- Import source files (except main.cpp) from the DefaultProject, add the UnitTestProject source files, and add -Idto input flag for C++ compiler. (similar to UnitTestProject)
-	|-...</code></pre>
+	|-...
+</code></pre>
 
 Because the .cpp file includes the Overrides.h file with angle brackets (#include <Overrides.h>) and give the local "dto" folder as a system-include folder (-Idto is in the C++ input argument set), the compiler always includes the current project-specific dto/Overrides.h file. So when the compiler compiles e.g. the Dependant.cpp in the DefaultProject, it includes the DefaultProject/dto/Overrides.h file; but when it compiles the same source file in the other MsProject, the Dependant.cpp includes MsProject/dto/Overrides.h.
 Due to this solution, you can compile the Default ProjectSources with different configurations without modifying the original DefaultProject code or adding the other project-specific definitions to the DefaultProject, especially definitions and implementations of mocks or stubs for dependencies.
@@ -342,7 +349,7 @@ It is inconvenient to define the default type of a member or a function paramete
 
 Here are these definitions:
 DependencyTypeOverride.h
-<pre><code>
+```c++
 namespace dto
 {
 ... <- Here is the Override template definition already known.
@@ -372,10 +379,10 @@ struct TypeOverride
 	using Df_t = typename Df<t_Default>::type;
 };
 ...
-}</code></pre>
+```
 
 Use of them:
-<pre><code>
+```c++
 struct A_Dpcy
 {
 	...
@@ -403,18 +410,17 @@ protected:
 	dto::Member0_t::Df_t<A_Dpcy> member0;			//The default type of member0 is A_Dpcy it is defined at the place of member0 definition.
 	dto::Member1_t::Df_t<B_Dpcy> member1;			//The default type of member1 is B_Dpcy
 };
-</code></pre>
+```
 
 You can override the type of Dependant::member0 and member1:
-<pre><code>
+```c++
 
 template<typename t_DefaultDtoDesc>
 struct dto::Override<Dependant, t_DefaultDtoDesc> : public t_DefaultDtoDesc
 {
 	using Member0_t = TypeOverride<B_Dpcy>;		//The new type of the member0 is B_Dpcy. The default is A_Dpcy.
 };
-
-</code></pre>
+```
 
 This override results that the type of member0 is B_Dpcy, the same as the member1, because the member1 type remains default, which is B_Dpcy.
 
@@ -426,7 +432,7 @@ Let's look at the problem. It's not too difficult to imagine that you have some 
 See an example:
 
 Class.h:
-<pre><code>
+```c++
 #include <Overrides.h> // for 4th method.
 class Class_1
 {
@@ -461,10 +467,10 @@ public:
 protected:
 	dto::Dep_t::Df_t<Class_1> dep;
 };
-</code></pre>
+```
 
 Class.cpp:
-<pre><code>
+```c++
 #inlude"Class.h"
 
 void Class_1::ProcessToGenerateData()
@@ -477,12 +483,12 @@ Class_2::dto::Dep_t::Df_t<Class_1>::DataCollection_t ProcessToGenerateData()
 	this->dep.ProcessToGenerateData();
 	return this->dep.DataCollection();
 }
-</code></pre>
+```
 
 When you would like to write a test project for your code above, you can mock dependencies to separate the modules from each other. For the dependency overriding of the Class_1 you have to place the overriding definition before the Class_1 definition. It is provided by the 4th method when you include (inject) the project-specific overriding header into the first place of your headers.
 
 TestProject/dto/Overrides.h:
-<pre><code>
+```c++
 #include <DependencyTypeOverride.h>
 
 struct Class_2;
@@ -492,14 +498,14 @@ struct Override<Class_2, t_DefinitionTracker, t_DefaultDtoDesc> : t_DefaultDtoDe
 {
 	using Dependency_t = ::dto::TypeOverride<Class_1_mock>;
 };
-</code></pre>
+```
 
 I think now you can see the problem. The question is, where the Class_1_mock definition should be? If we would like to define the Class_1_mock, first we need the Class_1::Data definition. So the only choice is to define it after the Class_1 definition. But we must define it before the Class_2 definition. We wouldn't like to separate the Class.h header, which would be overhead only for tests.
 
 We can do it like this:
 
 I added some new helpers into DependencyTypeOverride.h
-<pre><code>
+```c++
 ...
 namespace dto
 {
@@ -522,10 +528,10 @@ struct MockOfType
 };
 ...
 }
-</code></pre>
+```
 
 dto/Overrides.h:
-<pre><code>
+```c++
 template<typename t_DefinitionTracker, typename t_DefaultDtoDesc>
 struct Override<Class_2, t_DefinitionTracker, t_DefaultDtoDesc> : t_DefaultDtoDesc
 {
@@ -542,6 +548,6 @@ struct Mock <Class_1, t_Original>
 };
 
 }
-</code></pre>
+```
 
 You can define your own helpers like Mock and MockOfType if it is necessary for your projects.
