@@ -1,6 +1,6 @@
 # *Dependency Type Overriding*
 
-This description gives some practical tips and tricks for using dependency injection without calling any virtual function. 
+This description gives some practical tips and tricks for using dependency replaceing without calling any virtual function. 
 You face this situation, especially in the case of mocking objects for testing. But it can be practical in some other cases, especially when you build a system for more target systems.
 This description describes tips and tricks allowing: 
 - to replace the dependency without significantly modifying the original code and without using virtual functions in product build or make your dependant classes to template class for this purpose;
