@@ -7,6 +7,7 @@ This description describes tips and tricks allowing:
 - to replace dependencies independently from another dependency replacing. So that, it is enough to define only that dependency replace what you want to change, and you don't have to define the default dependencies again;
 - to replace a dependency without using macros and precompiler switches;
 - to hide the implementation details of your product from users, if you deliver a third-party product.
+
 You can use this programming method only in the C++ language.
 
 
@@ -49,6 +50,7 @@ Now, you can solve the initial problem without the knowledge described further o
 - replace the headers of dependencies (It is the hell of headers),
 - use macros (It is the hell of macros),
 - define the dependencies outside of class definition, especially in a configuration header file, with precompiler switches.
+
 None of the above methods meets the requirement of being easy to use. Although the last one is close to it, there are other methods easier to use. I pass over these methods because it would be too difficult to describe them here, mainly because I have dropped them out.
 
 In this method, we override dependencies at compile-time, so we change the type of dependencies. In the original code, the dependants should be able to receive the dependency type replacing/overriding from outside of dependant headers and sources, and from outside of the default project workspace too.
@@ -58,8 +60,8 @@ To override dependency type(s) of the dependant class(es)/struct(s) in the given
 - C++ template specialization features
 - C++ template parameter unevaluation features
 - C++ compilers include directories feature
-in this method.
-I'll call this programming method "dto" from the "dependency type override" expression.
+
+in this method. I'll call this programming method "dto" from the "dependency type override" expression.
 
 ## Overriding default definitions
 I use the class/struct inheritance features for getting the default dependency type from the base class, and we can override these definitions in the derived class definition. Therefore the base class (defaulter) contains the default definitions, and the derived one (overrider) contains the override definitions.
