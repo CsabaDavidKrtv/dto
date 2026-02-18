@@ -6,15 +6,27 @@
 namespace dto
 {
 
+/// <summary>
+/// It is used for take overriding options for the given class in the t_TargetType.
+/// In the template specialisation can you give override options for the t_TargetType class type.
+/// This class used by the Override template class.
+/// </summary>
 template<typename t_TargetType>
 struct OptionTracker
 {
 };
 
+/// <summary>
+/// This template class used for give overrides for the t_UnderOverride class.
+/// In the template specialisation can you give overrides for the t_UnderOverride class type.
+/// </summary>
 template<typename t_UnderOverride, typename t_OptionTracker = OptionTracker<t_UnderOverride>, typename t_DefaultDtoDesc = typename t_UnderOverride::dtoDesc>
 struct Override : public t_DefaultDtoDesc
 {};
 
+/// <summary>
+/// Used for give the default type definition.
+/// </summary>
 struct TypeDefault
 {
 	template<typename t_Default>
@@ -27,6 +39,9 @@ struct TypeDefault
 	using Df_t = typename Df<t_Default>::type;
 };
 
+/// <summary>
+/// Used for override the default type which defined by TypeDefault.
+/// </summary>
 template<typename t_Override>
 struct TypeOverride
 {
@@ -40,10 +55,18 @@ struct TypeOverride
 	using Df_t = typename Df<t_Default>::type;
 };
 
+/// <summary>
+/// Used for give mock definition for the given class in the t_OriginalSpec template parameter, via template specialisation.
+/// </summary>
+/// <typeparam name="t_OriginalSpec"></typeparam>
+/// <typeparam name="t_Original"></typeparam>
 template<typename t_OriginalSpec, typename t_Original = t_OriginalSpec>
 struct Mock
 {};
 
+/// <summary>
+/// Used for override the default type by its own mock type which defined with Mock template specialisation.
+/// </summary>
 struct MockOfType
 {
 	template<typename t_Default>
@@ -55,7 +78,6 @@ struct MockOfType
 	template<typename t_Default>
 	using Df_t = typename Df<t_Default>::type;
 };
-
 
 template<class t_VariableType, class... t_AcceptableTypes>
 class TypeIsAccepted
@@ -82,6 +104,13 @@ public:
 
 template<class t_VariableType, class... t_AcceptableTypes>
 using TypeIsAccepted_t = typename TypeIsAccepted< t_VariableType, t_AcceptableTypes...>::type;
+
+/// <summary>
+/// Simplified helper template to define a dependency type with a default.
+/// Usage: ::dto::Dependency<dto::MemberName_t, DefaultType> instead of dto::MemberName_t::Df_t<DefaultType>
+/// </summary>
+template<typename t_DtoType, typename t_Default>
+using Dependency = typename t_DtoType::template Df_t<t_Default>;
 
 }
 

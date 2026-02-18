@@ -9,3 +9,4 @@ set(dtoInclude "../../ExternalLibraries/dto")
 
 add_subdirectory(1_SympleTypeOverriding)
 add_subdirectory(2_InDemandDefault)
+add_subdirectory(3_TemplateHelper)
