@@ -1,0 +1,1 @@
+/usr/bin/c++ -Wl,--dependency-file=CMakeFiles/3_SimplifiedSyntax_Default.dir/link.d CMakeFiles/3_SimplifiedSyntax_Default.dir/src/3_SimplifiedSyntax.cpp.o CMakeFiles/3_SimplifiedSyntax_Default.dir/src/Dependant.cpp.o CMakeFiles/3_SimplifiedSyntax_Default.dir/src/Dependencies.cpp.o -o 3_SimplifiedSyntax_Default

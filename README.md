@@ -1,5 +1,24 @@
 # *Dependency Type Overriding*
 
+## Quick Start - Simplified Usage
+
+**New!** For a simplified, easy-to-use syntax with helper macros, see [SIMPLIFIED_USAGE.md](SIMPLIFIED_USAGE.md).
+
+**Quick Example:**
+```cpp
+struct MyClass
+{
+    DTO_DESC_BEGIN()
+        DTO_TYPE(Member0);
+    DTO_DESC_END(MyClass);
+
+protected:
+    DTO_DEP(dto::Member0_t, SomeDependency) member0;
+};
+```
+
+## Overview
+
 This description gives some practical tips and tricks for using dependency replaceing without calling any virtual function. 
 You face this situation, especially in the case of mocking objects for testing. But it can be practical in some other cases, especially when you build a system for more target systems.
 This description describes tips and tricks allowing: 
