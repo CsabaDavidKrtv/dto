@@ -1,3 +1,0 @@
-/home/runner/work/dto/dto/Examples/3_SimplifiedSyntax/Override/build/CMakeFiles/3_SimplifiedSyntax_Override.dir
-/home/runner/work/dto/dto/Examples/3_SimplifiedSyntax/Override/build/CMakeFiles/edit_cache.dir
-/home/runner/work/dto/dto/Examples/3_SimplifiedSyntax/Override/build/CMakeFiles/rebuild_cache.dir
