@@ -4,15 +4,9 @@
 namespace Dependants
 {
 
-void HelperDependant::Function()
+void MyDependant::Function()
 {
-	std::cout << "HelperDependant::Function() - member0.Data: " << member0.Data 
-	          << ", member1.Data: " << member1.Data << std::endl;
-}
-
-void TraditionalDependant::Function()
-{
-	std::cout << "TraditionalDependant::Function() - member0.Data: " << member0.Data 
+	std::cout << "MyDependant::Function() - member0.Data: " << member0.Data 
 	          << ", member1.Data: " << member1.Data << std::endl;
 }
 

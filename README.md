@@ -2,9 +2,9 @@
 
 ## Quick Start - Template Helper
 
-**New!** For a simplified syntax using a template helper (no macros), see [SIMPLIFIED_USAGE.md](SIMPLIFIED_USAGE.md).
+For clean, readable syntax using a template helper (no macros), see [SIMPLIFIED_USAGE.md](SIMPLIFIED_USAGE.md).
 
-**Quick Example:**
+**Example:**
 ```cpp
 struct MyClass
 {
@@ -17,11 +17,6 @@ struct MyClass
 protected:
     ::dto::Dependency<dto::Member0_t, SomeDependency> member0;
 };
-```
-
-Instead of the more verbose:
-```cpp
-    dto::Member0_t::Df_t<SomeDependency> member0;
 ```
 
 ## Overview
