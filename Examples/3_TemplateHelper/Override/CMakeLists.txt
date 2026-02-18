@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Use sources from Default project
 add_executable(3_TemplateHelper_Override
-    ${CMAKE_CURRENT_SOURCE_DIR}/../Default/src/3_SimplifiedSyntax.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../Default/src/3_TemplateHelper.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../Default/src/Dependant.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../Default/src/Dependencies.cpp
 )

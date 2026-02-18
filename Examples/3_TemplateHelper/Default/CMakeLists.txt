@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 add_executable(3_TemplateHelper_Default
-    src/3_SimplifiedSyntax.cpp
+    src/3_TemplateHelper.cpp
     src/Dependant.cpp
     src/Dependencies.cpp
 )
