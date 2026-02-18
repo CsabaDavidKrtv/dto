@@ -27,7 +27,6 @@ struct Override : public t_DefaultDtoDesc
 /// <summary>
 /// Used for give the default type definition.
 /// </summary>
-/// <typeparam name="t_TargetType"></typeparam>
 struct TypeDefault
 {
 	template<typename t_Default>
@@ -68,7 +67,6 @@ struct Mock
 /// <summary>
 /// Used for override the default type by its own mock type which defined with Mock template specialisation.
 /// </summary>
-/// <typeparam name="t_Default"></typeparam>
 struct MockOfType
 {
 	template<typename t_Default>
@@ -108,8 +106,9 @@ template<class t_VariableType, class... t_AcceptableTypes>
 using TypeIsAccepted_t = typename TypeIsAccepted< t_VariableType, t_AcceptableTypes...>::type;
 
 /// <summary>
-/// Simplified helper to define a dependency type with a default.
-/// Usage: DTO_DEP(MemberName, DefaultType) instead of dto::MemberName_t::Df_t<DefaultType>
+/// Simplified helper template to define a dependency type with a default.
+/// Usage: ::dto::Dependency<dto::MemberName_t, DefaultType> instead of dto::MemberName_t::Df_t<DefaultType>
+/// This provides an alternative to the DTO_DEP macro with explicit template syntax.
 /// </summary>
 template<typename t_DtoType, typename t_Default>
 using Dependency = typename t_DtoType::template Df_t<t_Default>;
