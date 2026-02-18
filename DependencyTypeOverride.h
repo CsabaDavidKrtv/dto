@@ -108,32 +108,11 @@ using TypeIsAccepted_t = typename TypeIsAccepted< t_VariableType, t_AcceptableTy
 /// <summary>
 /// Simplified helper template to define a dependency type with a default.
 /// Usage: ::dto::Dependency<dto::MemberName_t, DefaultType> instead of dto::MemberName_t::Df_t<DefaultType>
-/// This provides an alternative to the DTO_DEP macro with explicit template syntax.
 /// </summary>
 template<typename t_DtoType, typename t_Default>
 using Dependency = typename t_DtoType::template Df_t<t_Default>;
 
 }
-
-// Macro to reduce boilerplate for defining the dto type alias
-#define DTO_ENABLE(ClassName) \
-	using dto = ::dto::Override<ClassName>
-
-// Macro to simplify dependency member definition
-#define DTO_DEP(DtoType, DefaultType) \
-	typename DtoType::template Df_t<DefaultType>
-
-// Macro to simplify dtoDesc with TypeDefault members
-#define DTO_DESC_BEGIN() \
-	struct dtoDesc {
-
-#define DTO_DESC_END(ClassName) \
-	}; \
-	DTO_ENABLE(ClassName)
-
-// Macro for defining a type member in dtoDesc
-#define DTO_TYPE(MemberName) \
-	using MemberName##_t = ::dto::TypeDefault
 
 #define ACCEPTED_TYPES_FOR(i_Member, ...)					\
 static_assert(::dto::TypeIsAccepted<decltype(i_Member), __VA_ARGS__>::value,"The currently type of \"" #i_Member "\" isn't allowed for this member.")

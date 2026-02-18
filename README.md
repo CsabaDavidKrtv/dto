@@ -1,20 +1,27 @@
 # *Dependency Type Overriding*
 
-## Quick Start - Simplified Usage
+## Quick Start - Template Helper
 
-**New!** For a simplified, easy-to-use syntax with helper macros, see [SIMPLIFIED_USAGE.md](SIMPLIFIED_USAGE.md).
+**New!** For a simplified syntax using a template helper (no macros), see [SIMPLIFIED_USAGE.md](SIMPLIFIED_USAGE.md).
 
 **Quick Example:**
 ```cpp
 struct MyClass
 {
-    DTO_DESC_BEGIN()
-        DTO_TYPE(Member0);
-    DTO_DESC_END(MyClass);
+    struct dtoDesc
+    {
+        using Member0_t = ::dto::TypeDefault;
+    };
+    using dto = ::dto::Override<MyClass>;
 
 protected:
-    DTO_DEP(dto::Member0_t, SomeDependency) member0;
+    ::dto::Dependency<dto::Member0_t, SomeDependency> member0;
 };
+```
+
+Instead of the more verbose:
+```cpp
+    dto::Member0_t::Df_t<SomeDependency> member0;
 ```
 
 ## Overview

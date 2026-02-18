@@ -1,14 +1,12 @@
 # Simplified Usage Guide
 
-This guide shows simplified approaches to using the dto (Dependency Type Override) library.
+This guide shows how to use the `Dependency<>` template helper to simplify dto (Dependency Type Override) library usage.
 
 ## Overview
 
-The dto library has been enhanced with helper macros and templates to reduce boilerplate code and make the syntax more concise and readable.
+The dto library has been enhanced with a template helper to reduce verbosity and make the syntax more readable, without introducing macros.
 
-## Simplified Approaches
-
-### 1. Using Helper Macros (Recommended)
+## The Dependency Template Helper
 
 **Before (Traditional):**
 ```cpp
@@ -27,90 +25,55 @@ protected:
 };
 ```
 
-**After (Simplified with Macros):**
+**After (With Template Helper):**
 ```cpp
 struct MyClass
 {
-    DTO_DESC_BEGIN()
-        DTO_TYPE(Member0);
-        DTO_TYPE(Member1);
-    DTO_DESC_END(MyClass);
+    struct dtoDesc
+    {
+        using Member0_t = ::dto::TypeDefault;
+        using Member1_t = ::dto::TypeDefault;
+    };
+    using dto = ::dto::Override<MyClass>;
 
 protected:
-    DTO_DEP(dto::Member0_t, SomeDependency) member0;
-    DTO_DEP(dto::Member1_t, OtherDependency) member1;
+    ::dto::Dependency<dto::Member0_t, SomeDependency> member0;
+    ::dto::Dependency<dto::Member1_t, OtherDependency> member1;
 };
 ```
 
 **Benefits:**
-- Less verbose: `DTO_DEP(dto::Member0_t, DefaultType)` vs `dto::Member0_t::Df_t<DefaultType>`
-- Clearer intent with descriptive macro names
-- Automatic dto alias generation with `DTO_DESC_END(ClassName)`
-- Reduced chance of syntax errors
-
-### 2. Using the Dependency Helper Template
-
-**Alternative simplified syntax:**
-```cpp
-struct MyClass
-{
-    DTO_DESC_BEGIN()
-        DTO_TYPE(Dep);
-    DTO_DESC_END(MyClass);
-
-protected:
-    ::dto::Dependency<dto::Dep_t, SomeDependency> dep;
-};
-```
-
-This uses the `::dto::Dependency<DtoType, DefaultType>` template helper which is equivalent to `DtoType::Df_t<DefaultType>` but more readable.
-
-## Available Macros
-
-### `DTO_DESC_BEGIN()`
-Starts a dtoDesc definition. Use at the beginning of your dependency description block.
-
-### `DTO_DESC_END(ClassName)`
-Ends the dtoDesc definition and automatically creates the `using dto = ::dto::Override<ClassName>` alias.
-Requires the class name to be passed as an argument.
-
-### `DTO_TYPE(MemberName)`
-Defines a type member in dtoDesc using TypeDefault. Equivalent to:
-```cpp
-using MemberName_t = ::dto::TypeDefault;
-```
-
-### `DTO_DEP(DtoType, DefaultType)`
-Creates a dependency member with the specified default type. Equivalent to:
-```cpp
-typename DtoType::template Df_t<DefaultType>
-```
-
-### `DTO_ENABLE(ClassName)`
-Creates the dto type alias. Usually called automatically by `DTO_DESC_END()`, but can be used standalone if you need custom dtoDesc structure.
+- More readable: `::dto::Dependency<dto::Member0_t, DefaultType>` vs `dto::Member0_t::Df_t<DefaultType>`
+- Clearer intent - explicitly shows this is a dependency
+- No macros - pure template-based solution
+- Works with all C++ tools and IDEs
 
 ## Complete Example
 
-See the `Examples/3_SimplifiedSyntax` directory for a complete working example that demonstrates:
-- Simplified syntax with macros
+See the `Examples/3_TemplateHelper` directory for a complete working example that demonstrates:
+- Template helper usage
 - Traditional syntax (for comparison)
-- Helper template usage
 - How to override dependency types
 
 ### Building the Example
 
 ```bash
-cd Examples
+cd Examples/3_TemplateHelper/Default
 mkdir build && cd build
 cmake ..
 make
-./3_SimplifiedSyntax/Default/3_SimplifiedSyntax_Default    # Run with default dependencies
-./3_SimplifiedSyntax/Override/3_SimplifiedSyntax_Override  # Run with overridden dependencies
+./3_TemplateHelper_Default    # Run with default dependencies
+
+cd ../../Override
+mkdir build && cd build
+cmake ..
+make
+./3_TemplateHelper_Override  # Run with overridden dependencies
 ```
 
 ## Overriding Dependencies
 
-The override syntax remains the same regardless of which approach you use:
+The override syntax remains the same:
 
 ```cpp
 // In your project's dto/TypeOverrides.h
@@ -125,11 +88,12 @@ struct dto::Override<MyClass, t_OptionTracker, t_DefaultDtoDesc> : t_DefaultDtoD
 
 All traditional syntax remains fully supported. You can:
 - Mix old and new syntax in the same codebase
-- Gradually migrate to the simplified syntax
-- Choose the approach that best fits your use case
+- Gradually migrate to the template helper
+- Use whichever approach you prefer
 
-## When to Use Which Approach
+## When to Use the Template Helper
 
-- **Use macros**: When you want the most concise syntax and standard patterns
-- **Use Dependency template**: When you prefer explicit template syntax over macros
-- **Use traditional syntax**: When you need maximum control or have complex custom scenarios
+- **Use template helper**: When you want clearer, more readable syntax
+- **Use traditional syntax**: When you need to match existing code style or have other preferences
+
+Both approaches are equivalent and work identically.

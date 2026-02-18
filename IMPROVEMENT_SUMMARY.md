@@ -7,11 +7,11 @@ Translation: "This code here needs to be improved a little. How can its usage be
 
 ## Solution Overview
 
-The dto (Dependency Type Override) library has been enhanced with helper macros and templates to significantly reduce boilerplate code while maintaining full backward compatibility.
+The dto (Dependency Type Override) library has been enhanced with a template helper to reduce verbosity and improve readability, without introducing macros.
 
-## Key Improvements
+## Key Improvement: Dependency Template Helper
 
-### 1. Reduced Verbosity (~50% Less Code)
+### Reduced Verbosity
 
 **Before:**
 ```cpp
@@ -30,61 +30,49 @@ protected:
 };
 ```
 
-**After (using macros):**
-```cpp
-struct Dependant
-{
-    DTO_DESC_BEGIN()
-        DTO_TYPE(Member0);
-        DTO_TYPE(Member1);
-    DTO_DESC_END(Dependant);
-
-protected:
-    DTO_DEP(dto::Member0_t, Dependencies::A_Dpcy) member0;
-    DTO_DEP(dto::Member1_t, Dependencies::B_Dpcy) member1;
-};
-```
-
 **After (using template helper):**
 ```cpp
 struct Dependant
 {
-    DTO_DESC_BEGIN()
-        DTO_TYPE(Dep);
-    DTO_DESC_END(Dependant);
+    struct dtoDesc
+    {
+        using Member0_t = ::dto::TypeDefault;
+        using Member1_t = ::dto::TypeDefault;
+    };
+    using dto = ::dto::Override<Dependant>;
 
 protected:
-    ::dto::Dependency<dto::Dep_t, Dependencies::A_Dpcy> dep;
+    ::dto::Dependency<dto::Member0_t, Dependencies::A_Dpcy> member0;
+    ::dto::Dependency<dto::Member1_t, Dependencies::B_Dpcy> member1;
 };
 ```
 
-### 2. New Helper Macros
+### The Template Helper
 
-| Macro | Purpose | Replaces |
-|-------|---------|----------|
-| `DTO_DESC_BEGIN()` | Start dependency descriptor | `struct dtoDesc {` |
-| `DTO_DESC_END(ClassName)` | End descriptor and create dto alias | `}; using dto = ::dto::Override<ClassName>` |
-| `DTO_TYPE(Name)` | Define a type member | `using Name_t = ::dto::TypeDefault;` |
-| `DTO_DEP(Type, Default)` | Define dependency member | `typename Type::template Df_t<Default>` |
-| `DTO_ENABLE(ClassName)` | Manually create dto alias | `using dto = ::dto::Override<ClassName>` |
+A single template alias has been added:
 
-### 3. Template Helper
+```cpp
+template<typename t_DtoType, typename t_Default>
+using Dependency = typename t_DtoType::template Df_t<t_Default>;
+```
 
-`::dto::Dependency<DtoType, DefaultType>` provides an alternative to the macro syntax for developers who prefer explicit templates.
+This allows writing:
+```cpp
+::dto::Dependency<dto::Member_t, DefaultType>
+```
 
-### 4. Comprehensive Documentation
-
-- **SIMPLIFIED_USAGE.md**: Complete guide with examples
-- **README.md**: Quick start section added
-- **Examples/3_SimplifiedSyntax**: Working example showing all approaches
+Instead of:
+```cpp
+dto::Member_t::Df_t<DefaultType>
+```
 
 ## Benefits
 
-1. **More Readable**: Descriptive macro names make intent clear
-2. **Less Error-Prone**: Reduced template syntax complexity
-3. **Faster Development**: Less boilerplate to write and maintain
+1. **More Readable**: Explicitly shows this is a dependency
+2. **No Macros**: Pure template-based solution that works with all C++ tools
+3. **Less Verbose**: Shorter and clearer syntax
 4. **Backward Compatible**: Existing code works without changes
-5. **Flexible**: Choose between macros, templates, or traditional syntax
+5. **IDE Friendly**: Better autocomplete and navigation support
 
 ## Verification
 
@@ -98,19 +86,18 @@ protected:
 
 No migration required! The new syntax is entirely optional:
 - Continue using traditional syntax
-- Adopt simplified syntax in new code
+- Adopt template helper syntax in new code
 - Gradually migrate existing code as needed
 - Mix approaches as appropriate for your use case
 
 ## Files Modified
 
-1. `DependencyTypeOverride.h` - Added helper macros and template
+1. `DependencyTypeOverride.h` - Added `Dependency<>` template helper
 2. `Examples/ExternalLibraries/dto/DependencyTypeOverride.h` - Updated copy
-3. `README.md` - Added quick start section
-4. `SIMPLIFIED_USAGE.md` - New comprehensive guide
-5. `Examples/3_SimplifiedSyntax/` - New example project
-6. `.gitignore` - Added build artifacts
+3. `README.md` - Added template helper example
+4. `SIMPLIFIED_USAGE.md` - Updated guide
+5. `Examples/3_TemplateHelper/` - Example project demonstrating the helper
 
 ## Conclusion
 
-The dto library is now significantly easier to use while maintaining all its original power and flexibility. Users can choose the syntax that best fits their needs and preferences.
+The dto library is now easier to use with a cleaner, more readable syntax, while maintaining all its original power and flexibility. The solution uses only template features, avoiding macros entirely.
