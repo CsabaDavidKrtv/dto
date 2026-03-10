@@ -1,0 +1,1 @@
+/usr/bin/c++  -Wall -Wl,--dependency-file=CMakeFiles/1_Default.dir/link.d CMakeFiles/1_Default.dir/src/1_SimpleTypeDefault.cpp.o CMakeFiles/1_Default.dir/src/Dependant.cpp.o CMakeFiles/1_Default.dir/src/Dependencies.cpp.o -o 1_Default

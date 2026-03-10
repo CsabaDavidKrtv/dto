@@ -108,6 +108,3 @@ template<class t_VariableType, class... t_AcceptableTypes>
 using TypeIsAccepted_t = typename TypeIsAccepted< t_VariableType, t_AcceptableTypes...>::type;
 
 }
-
-#define ACCEPTED_TYPES_FOR(i_Member, ...)					\
-static_assert(::dto::TypeIsAccepted<decltype(i_Member), __VA_ARGS__>::value,"The currently type of \"" #i_Member "\" isn't allowed for this member.")
