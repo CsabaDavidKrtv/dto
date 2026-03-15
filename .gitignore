@@ -2,3 +2,8 @@
 out/
 googletest-master/
 
+/build
+
+# CMake presets / Visual Studio CMake
+CMakeUserPresets.json
+CMakeSettings.json
